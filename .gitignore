@@ -1,2 +1,15 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
+
+# Environment files
+*.env
+*.venv
+env/
 venv/
+
+# IDE files
+.idea/
+.vscode/
+
+# Jupyter files
+.ipynb_checkpoints
