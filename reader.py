@@ -1,5 +1,5 @@
 """
-Classes to read file contents.
+Classes to read file to data.
 Supported funcationalities:
     .csv -> dataframe
 """
@@ -17,7 +17,7 @@ class Reader(ABC):
         """
         Initialize Reader instance.
         Args:
-            fpath (str): Absolute path to file location.
+            fpath (str): Absolute path to read from.
         """
         self.fpath = fpath
         self.extension = self._get_extension()
