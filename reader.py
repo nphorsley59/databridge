@@ -1,4 +1,11 @@
+"""
+Classes to read file contents.
+Supported funcationalities:
+    .csv -> dataframe
+"""
+
 from abc import ABC, abstractmethod
+import os
 
 import pandas as pd
 
@@ -13,16 +20,30 @@ class Reader(ABC):
             fpath (str): Absolute path to file location.
         """
         self.fpath = fpath
+        self.extension = self._get_extension()
 
     @abstractmethod
-    def read_file(self):
-        """Reader file at fpath."""
-        raise NotImplementedException
+    def read_to_df(self):
+        """Read file at fpath to dataframe."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def read_to_text(self):
+        """Read file at fpath to text."""
+        raise NotImplementedError
+
+    def _get_extension(self) -> str:
+        """Get extension from fpath."""
+        return os.path.splitext(self.fpath)
 
 
 class CsvReader(Reader):
     """Representation of a CSV reader object."""
 
-    def read_file(self) -> pd.DataFrame:
-        """Read CSV file at fpath."""
+    def read_to_df(self) -> pd.DataFrame:
+        """Read CSV file at fpath to dataframe."""
         return pd.read_csv(self.fpath)
+
+    def read_to_text(self):
+        """Read CSV file at fpath to text; not supported."""
+        raise AttributeError("Method not supported.")
