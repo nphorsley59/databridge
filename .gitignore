@@ -16,3 +16,7 @@ venv/
 
 # Jupyter files
 .ipynb_checkpoints
+
+# Test files
+coverage.xml
+.coverage
