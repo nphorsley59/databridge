@@ -7,4 +7,4 @@ class StorageType(str, Enum):
 
 
 class FileType(str, Enum):
-    CSV = ".csv"
+    CSV = "csv"

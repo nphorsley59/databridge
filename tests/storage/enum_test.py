@@ -23,16 +23,16 @@ def test_storagetype_member_uniqueness():
 
 def test_filetype_properties():
     assert enum.FileType.CSV.name == "CSV"
-    assert enum.FileType.CSV.value == ".csv"
+    assert enum.FileType.CSV.value == "csv"
     assert isinstance(enum.FileType.CSV, enum.FileType)
 
 
 def test_filetype_members():
-    assert enum.FileType.CSV == ".csv"
+    assert enum.FileType.CSV == "csv"
 
 
 def test_filetype_retrieval():
-    assert enum.FileType(".csv") == enum.FileType.CSV
+    assert enum.FileType("csv") == enum.FileType.CSV
 
 
 def test_filetype_member_uniqueness():
