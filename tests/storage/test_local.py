@@ -2,12 +2,12 @@
 import pandas as pd
 import pytest
 
-from adapters.storage import local
+from adapters.storage._local import LocalStorage
 
 
 @pytest.fixture
 def local_storage_instance():
-    return local.LocalStorage()
+    return LocalStorage()
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def temp_csv_fpath(tmp_path):
 
 
 @pytest.fixture
-def temp_df():
+def sample_df():
     data = {
         'Name': ['Alice', 'Bob', 'Charlie', 'David'],
         'Age': [25, 30, 35, 40],
@@ -44,12 +44,12 @@ def test_format_fpath_with_invalid(local_storage_instance):
         local_storage_instance._format_fpath(fpath=not_str_fpath)
 
 
-def test_write(local_storage_instance, temp_df, temp_csv_fpath):
-    local_storage_instance.write(obj=temp_df, fpath=temp_csv_fpath)
+def test_write(local_storage_instance, sample_df, temp_csv_fpath):
+    local_storage_instance.write(obj=sample_df, fpath=temp_csv_fpath)
     assert local_storage_instance.exists(fpath=temp_csv_fpath)
 
 
-def test_read(local_storage_instance, temp_df, temp_csv_fpath):
-    local_storage_instance.write(obj=temp_df, fpath=temp_csv_fpath)
+def test_read(local_storage_instance, sample_df, temp_csv_fpath):
+    local_storage_instance.write(obj=sample_df, fpath=temp_csv_fpath)
     df = local_storage_instance.read(fpath=temp_csv_fpath)
-    pd.testing.assert_frame_equal(temp_df, df)
+    pd.testing.assert_frame_equal(sample_df, df)

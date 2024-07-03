@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Callable, Union
 
-from adapters.storage.abstract import Storage
+from adapters.storage._abstract import Storage
 
 
 class LocalStorage(Storage):

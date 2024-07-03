@@ -8,3 +8,5 @@ class StorageType(str, Enum):
 
 class FileType(str, Enum):
     CSV = "csv"
+    JSON = "json"
+    TXT = "txt"
