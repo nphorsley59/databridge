@@ -5,7 +5,7 @@ from typing import Callable
 
 import pandas as pd
 
-from adapters.storage._enum import FileType
+from databridge.storage._enum import FileType
 
 
 class Storage(ABC):

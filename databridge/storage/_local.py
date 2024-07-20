@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Callable, Union
 
-from adapters.storage._abstract import Storage
+from databridge.storage._abstract import Storage
 
 
 class LocalStorage(Storage):

@@ -1,5 +1,5 @@
 
-from adapters.storage._enum import FileType, StorageType
+from databridge.storage._enum import FileType, StorageType
 
 
 def test_storagetype_properties():

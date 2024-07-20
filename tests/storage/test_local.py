@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from adapters.storage._local import LocalStorage
+from databridge.storage._local import LocalStorage
 
 
 @pytest.fixture

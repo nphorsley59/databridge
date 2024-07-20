@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from adapters._config import Directory
+from databridge._config import Directory
 
 
 @pytest.fixture

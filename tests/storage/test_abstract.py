@@ -6,7 +6,7 @@ from typing import Callable, Union
 import pandas as pd
 import pytest
 
-from adapters.storage._abstract import Storage
+from databridge.storage._abstract import Storage
 
 
 class ConcreteStorage(Storage):
