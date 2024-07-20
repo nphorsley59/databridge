@@ -1,4 +1,3 @@
-
 import pandas as pd
 import pytest
 
@@ -18,9 +17,9 @@ def temp_csv_fpath(tmp_path):
 @pytest.fixture
 def sample_df():
     data = {
-        'Name': ['Alice', 'Bob', 'Charlie', 'David'],
-        'Age': [25, 30, 35, 40],
-        'Occupation': ['Engineer', 'Doctor', 'Artist', 'Data Scientist']
+        "Name": ["Alice", "Bob", "Charlie", "David"],
+        "Age": [25, 30, 35, 40],
+        "Occupation": ["Engineer", "Doctor", "Artist", "Data Scientist"],
     }
     return pd.DataFrame(data)
 
@@ -33,13 +32,13 @@ def test_format_fpath_with_path(temp_csv_fpath, local_storage_instance):
 def test_format_fpath_with_str(temp_csv_fpath, local_storage_instance):
     fpath = local_storage_instance._format_fpath(fpath=str(temp_csv_fpath))
     assert isinstance(fpath, str)
-    with pytest.raises(TypeError): 
+    with pytest.raises(TypeError):
         not_str_fpath = {"test": "csv"}
         local_storage_instance._format_fpath(fpath=not_str_fpath)
 
 
 def test_format_fpath_with_invalid(local_storage_instance):
-    with pytest.raises(TypeError): 
+    with pytest.raises(TypeError):
         not_str_fpath = {"test": "csv"}
         local_storage_instance._format_fpath(fpath=not_str_fpath)
 

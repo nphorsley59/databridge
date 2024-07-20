@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 from typing import Callable, Union
@@ -16,22 +15,22 @@ class ConcreteStorage(Storage):
         if not isinstance(fpath, str):
             raise TypeError("File path must be Path or str.")
         return fpath
-        
+
     def _read(
-            self, 
-            fpath: str, 
-            reader: Callable,
-            **kwargs,
+        self,
+        fpath: str,
+        reader: Callable,
+        **kwargs,
     ):
         reader = reader or self._get_reader_callable(fpath=fpath)
         return reader(fpath=fpath, **kwargs)
 
     def _write(
-            self,
-            obj,
-            fpath: str,
-            writer: Callable,
-            **kwargs,
+        self,
+        obj,
+        fpath: str,
+        writer: Callable,
+        **kwargs,
     ):
         writer = writer or self._get_writer_callable(fpath=fpath)
         return writer(obj=obj, fpath=fpath, **kwargs)
@@ -51,8 +50,8 @@ def test_storage_init(concrete_storage_instance):
 
 
 def test_storage_get_csv_reader_callable(
-        concrete_storage_instance,
-        temp_csv_fpath,
+    concrete_storage_instance,
+    temp_csv_fpath,
 ):
     func = concrete_storage_instance._get_reader_callable(
         fpath=str(temp_csv_fpath),
@@ -61,8 +60,8 @@ def test_storage_get_csv_reader_callable(
 
 
 def test_storage_get_csv_writer_callable(
-        concrete_storage_instance,
-        temp_csv_fpath,
+    concrete_storage_instance,
+    temp_csv_fpath,
 ):
     func = concrete_storage_instance._get_writer_callable(
         fpath=str(temp_csv_fpath),
@@ -75,7 +74,7 @@ def sample_df():
     data = {
         "Name": ["Alice", "Bob", "Charlie", "David"],
         "Age": [25, 30, 35, 40],
-        "Occupation": ["Engineer", "Doctor", "Artist", "Data Scientist"]
+        "Occupation": ["Engineer", "Doctor", "Artist", "Data Scientist"],
     }
     return pd.DataFrame(data)
 
@@ -83,24 +82,22 @@ def sample_df():
 @pytest.fixture
 def sample_dict():
     return {
-        "name": "John", 
-        "age": 30, 
-        "city": "New York", 
+        "name": "John",
+        "age": 30,
+        "city": "New York",
         "children": ["Anna", "Ella"],
     }
 
 
 @pytest.fixture
 def sample_str():
-    return (
-        """
+    return """
         Name, Age, Occupation
         Alice, 25, Engineer
         Bob, 30, Doctor
         Charlie, 35, Artist
         David, 40, Data Scientist
         """
-    )
 
 
 @pytest.fixture
