@@ -16,5 +16,6 @@ env/
 .ipynb_checkpoints
 
 # Test files
+.pytest_cache
 coverage.xml
 .coverage
