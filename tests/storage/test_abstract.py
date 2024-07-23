@@ -148,6 +148,54 @@ def test_read_txt(concrete_storage_instance, sample_str, temp_txt_fpath):
     assert sample_str == output_str
 
 
+@pytest.fixture
+def temp_xml_fpath(tmp_path):
+    return tmp_path / "test.xml"
+
+
+def test_write_xml(concrete_storage_instance, sample_df, temp_xml_fpath):
+    concrete_storage_instance.write(obj=sample_df, fpath=temp_xml_fpath)
+    assert concrete_storage_instance.exists(fpath=temp_xml_fpath)
+
+
+def test_read_xml(concrete_storage_instance, sample_df, temp_xml_fpath):
+    concrete_storage_instance.write(obj=sample_df, fpath=temp_xml_fpath)
+    output_dataframe = concrete_storage_instance.read(fpath=temp_xml_fpath)
+    pd.testing.assert_frame_equal(sample_df, output_dataframe)
+
+
+@pytest.fixture
+def temp_xlsx_fpath(tmp_path):
+    return tmp_path / "test.xlsx"
+
+
+def test_write_xlsx(concrete_storage_instance, sample_df, temp_xlsx_fpath):
+    concrete_storage_instance.write(obj=sample_df, fpath=temp_xlsx_fpath)
+    assert concrete_storage_instance.exists(fpath=temp_xlsx_fpath)
+
+
+def test_read_xlsx(concrete_storage_instance, sample_df, temp_xlsx_fpath):
+    concrete_storage_instance.write(obj=sample_df, fpath=temp_xlsx_fpath)
+    output_dataframe = concrete_storage_instance.read(fpath=temp_xlsx_fpath)
+    pd.testing.assert_frame_equal(sample_df, output_dataframe)
+
+
+@pytest.fixture
+def temp_parquet_fpath(tmp_path):
+    return tmp_path / "test.parquet"
+
+
+def test_write_parquet(concrete_storage_instance, sample_df, temp_parquet_fpath):
+    concrete_storage_instance.write(obj=sample_df, fpath=temp_parquet_fpath)
+    assert concrete_storage_instance.exists(fpath=temp_parquet_fpath)
+
+
+def test_read_parquet(concrete_storage_instance, sample_df, temp_parquet_fpath):
+    concrete_storage_instance.write(obj=sample_df, fpath=temp_parquet_fpath)
+    output_dataframe = concrete_storage_instance.read(fpath=temp_parquet_fpath)
+    pd.testing.assert_frame_equal(sample_df, output_dataframe)
+
+
 class DummyStorage(Storage):
     def _format_fpath(self, fpath):
         super()._format_fpath(fpath)
