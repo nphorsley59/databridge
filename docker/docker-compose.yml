@@ -4,7 +4,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     volumes:
-      - ..:/app
+      - ..:/app  # Bind mount the parent directory
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
@@ -18,3 +18,20 @@ services:
     environment:
       - SERVICES=s3
       - DEBUG=1
+    volumes:
+      - localstack_data:/var/lib/localstack  # Use the named volume
+
+  init-s3:
+    image: amazonlinux
+    depends_on:
+      - localstack
+    entrypoint: ["/bin/sh", "-c", "/scripts/create-bucket.sh"]
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - ../bin/create-bucket.sh:/scripts/create-bucket.sh  # Bind mount the script
+
+volumes:
+  localstack_data:
