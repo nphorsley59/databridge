@@ -1,7 +1,8 @@
 import boto3
 from botocore.exceptions import ClientError
-from pathlib import Path
-from typing import Callable, Union
+import io
+
+import pandas as pd
 
 from databridge.storage._abstract import Storage
 
@@ -13,31 +14,38 @@ class S3Storage(Storage):
         aws_access_key_id: str = None, 
         aws_secret_access_key: str = None, 
         region_name: str = None,
+        endpoint_url: str = None,
     ):
         self.bucket_name = bucket_name
         self.s3_client = boto3.client(
             's3',
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
-            region_name=region_name
+            region_name=region_name,
+            endpoint_url=endpoint_url,
         )
 
-    def _format_fpath(self, fpath: Union[Path, str]):
-        if isinstance(fpath, Path):
-            fpath = str(fpath)
-        if not isinstance(fpath, str):
-            raise TypeError("File path must be Path or str.")
-        return fpath
+    def _read(
+        self, 
+        fpath: str, 
+        **kwargs,
+    ):
+        reader = self.s3_client.get_object
+        obj = reader(Bucket=self.bucket_name, Key=fpath, **kwargs)['Body']
+        buffer = io.StringIO(obj.read().decode('utf-8'))
+        return pd.read_csv(buffer, **kwargs)
 
-    def _read(self, fpath: str, reader: Callable, **kwargs):
-        reader = reader or self._get_reader_callable(fpath=fpath)
-        obj = self.s3_client.get_object(Bucket=self.bucket_name, Key=fpath)
-        return reader(obj['Body'], **kwargs)
-
-    def _write(self, obj, fpath: str, writer: Callable, **kwargs):
-        writer = writer or self._get_writer_callable(fpath=fpath)
-        body = writer(obj=obj, **kwargs)
-        self.s3_client.put_object(Bucket=self.bucket_name, Key=fpath, Body=body)
+    def _write(
+        self, 
+        obj, 
+        fpath: str, 
+        **kwargs,
+    ):
+        writer = self.s3_client.put_object
+        buffer = io.StringIO()
+        obj.to_csv(buffer, index=False)
+        buffer.seek(0)
+        writer(Bucket=self.bucket_name, Key=fpath, Body=buffer.getvalue().encode("utf-8"), **kwargs)
 
     def exists(self, fpath):
         fpath = self._format_fpath(fpath=fpath)
@@ -48,4 +56,10 @@ class S3Storage(Storage):
             if e.response['Error']['Code'] == '404':
                 return False
             else:
-                raise
+                raise e
+
+    def delete(self, fpath):
+        fpath = self._format_fpath(fpath=fpath)
+        if not self.exists(fpath=fpath):
+            raise FileNotFoundError(f"No such file: '{fpath}'")
+        self.s3_client.delete_object(Bucket=self.bucket_name, Key=fpath)
