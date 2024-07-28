@@ -4,22 +4,18 @@ from botocore.exceptions import ClientError
 import pandas as pd
 import pytest
 
-from databridge._config import Directory
+from databridge._config import Config, Directory
 from databridge.storage._s3 import S3Storage
-
-
-BUCKET_NAME = "test-bucket"
-ENDPOINT_URL = "http://localhost:4566"
 
 
 @pytest.fixture
 def s3_storage_instance():
     return S3Storage(
-        bucket_name=BUCKET_NAME,
-        aws_access_key_id="test",
-        aws_secret_access_key="test",
-        region_name="us-east-1",
-        endpoint_url=ENDPOINT_URL,
+        bucket_name=Config.S3_BUCKET_NAME,
+        aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY,
+        region_name = Config.AWS_REGION,
+        endpoint_url = Config.S3_ENDPOINT_URL,
     )
 
 
