@@ -14,3 +14,5 @@ aws --endpoint-url=http://localstack:4566 s3 mb s3://test-bucket --region us-eas
 # Verify the bucket creation
 echo "Listing buckets to verify creation..."
 aws --endpoint-url=http://localstack:4566 s3 ls
+
+echo "S3 bucket setup complete."
