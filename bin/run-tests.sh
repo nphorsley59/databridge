@@ -17,7 +17,7 @@ while true; do
   else
     echo "S3 bucket $S3_BUCKET_NAME is not available yet."
   fi
-  sleep 5
+  sleep 10
 done
 
 # Run tests
