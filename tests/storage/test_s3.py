@@ -1,8 +1,10 @@
+import os
 from botocore.exceptions import ClientError
 
 import pandas as pd
 import pytest
 
+from databridge._config import Directory
 from databridge.storage._s3 import S3Storage
 
 
@@ -19,6 +21,16 @@ def s3_storage_instance():
         region_name="us-east-1",
         endpoint_url=ENDPOINT_URL,
     )
+
+
+@pytest.fixture
+def asset_csv_fpath():
+    return os.path.join(Directory.TEST_ASSETS, "test.csv")
+
+
+@pytest.fixture
+def gallery_csv_fpath():
+    return os.path.join(Directory.TEST_GALLERY, "test.csv")
 
 
 @pytest.fixture
@@ -41,6 +53,22 @@ def sample_df():
     return pd.DataFrame(data)
 
 
+def test_write_exists(s3_storage_instance, sample_df, temp_csv_fpath):
+    assert not s3_storage_instance.exists(temp_csv_fpath)
+    s3_storage_instance.write(obj=sample_df, fpath=temp_csv_fpath)
+    assert s3_storage_instance.exists(fpath=temp_csv_fpath)
+    s3_storage_instance.delete(fpath=temp_csv_fpath)
+    assert not s3_storage_instance.exists(temp_csv_fpath)
+
+
+def test_read(s3_storage_instance, sample_df, temp_csv_fpath):
+    s3_storage_instance.write(obj=sample_df, fpath=temp_csv_fpath)
+    df = s3_storage_instance.read(fpath=temp_csv_fpath)
+    pd.testing.assert_frame_equal(sample_df, df)
+    s3_storage_instance.delete(fpath=temp_csv_fpath)
+    assert not s3_storage_instance.exists(temp_csv_fpath)
+
+
 def test_exists_file_not_found(s3_storage_instance, nonexistent_fpath):
     s3_storage_instance.exists(fpath=nonexistent_fpath)
 
@@ -56,22 +84,13 @@ def test_exists_with_non_404_error(s3_storage_instance, mocker, nonexistent_fpat
     assert exc_info.value.response['Error']['Message'] == 'Internal Server Error'
 
 
+def test_delete(s3_storage_instance, sample_df, gallery_csv_fpath): 
+    s3_storage_instance.write(obj=sample_df, fpath=gallery_csv_fpath)
+    assert s3_storage_instance.exists(fpath=gallery_csv_fpath)
+    s3_storage_instance.delete(fpath=gallery_csv_fpath)
+    assert not s3_storage_instance.exists(fpath=gallery_csv_fpath)
+
+
 def test_delete_file_not_found(s3_storage_instance, nonexistent_fpath):
     with pytest.raises(FileNotFoundError):
         s3_storage_instance.delete(fpath=nonexistent_fpath)
-
-
-def test_write(s3_storage_instance, sample_df, temp_csv_fpath):
-    assert not s3_storage_instance.exists(temp_csv_fpath)
-    s3_storage_instance.write(obj=sample_df, fpath=temp_csv_fpath)
-    assert s3_storage_instance.exists(fpath=temp_csv_fpath)
-    s3_storage_instance.delete(fpath=temp_csv_fpath)
-    assert not s3_storage_instance.exists(temp_csv_fpath)
-
-
-def test_read(s3_storage_instance, sample_df, temp_csv_fpath):
-    s3_storage_instance.write(obj=sample_df, fpath=temp_csv_fpath)
-    df = s3_storage_instance.read(fpath=temp_csv_fpath)
-    pd.testing.assert_frame_equal(sample_df, df)
-    s3_storage_instance.delete(fpath=temp_csv_fpath)
-    assert not s3_storage_instance.exists(temp_csv_fpath)

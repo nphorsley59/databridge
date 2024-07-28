@@ -1,8 +1,7 @@
 import boto3
 from botocore.exceptions import ClientError
 import io
-
-import pandas as pd
+from typing import Callable
 
 from databridge.storage._abstract import Storage
 
@@ -28,24 +27,37 @@ class S3Storage(Storage):
     def _read(
         self, 
         fpath: str, 
+        reader: Callable = None,
         **kwargs,
     ):
-        reader = self.s3_client.get_object
-        obj = reader(Bucket=self.bucket_name, Key=fpath, **kwargs)['Body']
-        buffer = io.StringIO(obj.read().decode('utf-8'))
-        return pd.read_csv(buffer, **kwargs)
+        reader = reader or self._get_reader_callable(fpath=fpath)
+        obj = self.s3_client.get_object(
+            Bucket=self.bucket_name, 
+            Key=fpath, 
+            **kwargs,
+        )
+        body = obj['Body']
+        buffer = io.StringIO(body.read().decode('utf-8'))
+        return reader(buffer, **kwargs)
 
     def _write(
         self, 
         obj, 
         fpath: str, 
+        writer: Callable = None,
         **kwargs,
     ):
-        writer = self.s3_client.put_object
+        writer = writer or self._get_writer_callable(fpath=fpath)
         buffer = io.StringIO()
-        obj.to_csv(buffer, index=False)
+        writer(obj=obj, fpath=buffer, **kwargs)
         buffer.seek(0)
-        writer(Bucket=self.bucket_name, Key=fpath, Body=buffer.getvalue().encode("utf-8"), **kwargs)
+        body = buffer.getvalue().encode("utf-8")
+        self.s3_client.put_object(
+            Bucket=self.bucket_name, 
+            Key=fpath, 
+            Body=body, 
+            **kwargs,
+        )
 
     def exists(self, fpath):
         fpath = self._format_fpath(fpath=fpath)
