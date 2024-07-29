@@ -8,7 +8,7 @@ while true; do
   echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
   echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
   echo "AWS_REGION: $AWS_REGION"
-  echo "Running AWS CLI command to list S3 bucket..."
+  echo "Running AWS CLI command..."
   output=$(aws --endpoint-url="$S3_ENDPOINT_URL" s3 ls)
   echo "Available buckets: $output"
   if echo "$output" | grep -q "test-bucket"; then
@@ -21,18 +21,19 @@ while true; do
 done
 
 # Ensure Postgres database is available
-echo "Waiting for Postgres databases to be available..."
+echo "Waiting for Postgres database to be available..."
 while true; do
   echo "PG_USER: $PG_USER"
   echo "PG_HOST: $PG_HOST"
   echo "PG_PORT: $PG_PORT"
-  echo "Running PSQL CLI command to list databases..."
-  output=$(psql -h $PG_HOST -p $PG_PORT -U $PG_USER -lqt | cut -d '|' -f 1 | grep -v '^$' | wc -l)
-  if [ "$output" -gt 0 ]; then
-    echo "There are $output databases available."
+  echo "PG_DATABASE: $PG_DATABASE"
+  echo "Running PSQL CLI command..."
+  output=$(psql -h $PG_HOST -p $PG_PORT -U $PG_USER -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$PG_DATABASE'")
+  if [ "$output" = "1" ]; then
+    echo "Database $PG_DATABASE is available."
     break
   else
-    echo "There are no databases available."
+    echo "Database $PG_DATABASE is not available."
   fi
   sleep 10
 done
