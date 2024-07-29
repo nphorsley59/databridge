@@ -48,13 +48,13 @@ def test_read(local_storage_instance, sample_df, temp_csv_fpath):
     pd.testing.assert_frame_equal(sample_df, df)
 
 
-def test_delete(local_storage_instance, sample_df, gallery_csv_fpath): 
+def test_delete(local_storage_instance, sample_df, gallery_csv_fpath):
     local_storage_instance.write(obj=sample_df, fpath=gallery_csv_fpath)
     assert local_storage_instance.exists(fpath=gallery_csv_fpath)
     local_storage_instance.delete(fpath=gallery_csv_fpath)
     assert not local_storage_instance.exists(fpath=gallery_csv_fpath)
 
 
-def test_delete_file_not_found(local_storage_instance): 
+def test_delete_file_not_found(local_storage_instance):
     with pytest.raises(FileNotFoundError):
         local_storage_instance.delete(fpath="nonexistent_file")

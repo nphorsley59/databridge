@@ -203,7 +203,7 @@ class DummyStorage(Storage):
 
     def exists(self, fpath):
         super().exists(fpath)
-    
+
     def delete(self, fpath):
         super().delete(fpath)
 

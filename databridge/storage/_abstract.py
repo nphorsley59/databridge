@@ -9,15 +9,32 @@ from databridge.storage._enum import FileType
 
 
 class Storage(ABC):
-    def __init__(self):
-        pass
+    @abstractmethod
+    def _read(
+        self,
+        fpath: Union[str, Path],
+        reader: Callable,
+        **kwargs,
+    ):
+        raise NotImplementedError("Subclasses must implement _read_file().")
 
-    def _format_fpath(self, fpath):
-        if isinstance(fpath, Path):
-            fpath = str(fpath)
-        if not isinstance(fpath, str):
-            raise TypeError("File path must be Path or str.")
-        return fpath
+    @abstractmethod
+    def _write(
+        self,
+        obj,
+        fpath: Union[str, Path],
+        writer: Callable,
+        **kwargs,
+    ):
+        raise NotImplementedError("Subclasses must implement _write_file().")
+
+    @abstractmethod
+    def exists(self, fpath: Union[str, Path]):
+        raise NotImplementedError("Subclasses must implement exists().")
+
+    @abstractmethod
+    def delete(self, fpath: Union[str, Path]):
+        raise NotImplementedError("Subclasses must implement delete().")
 
     @staticmethod
     def _get_csv_reader() -> Callable:
@@ -139,24 +156,12 @@ class Storage(ABC):
         if filetype == FileType.XML:
             return self._get_xml_writer()
 
-    @abstractmethod
-    def _read(
-        self,
-        fpath: Union[str, Path],
-        reader: Callable,
-        **kwargs,
-    ):
-        raise NotImplementedError("Subclasses must implement _read_file().")
-
-    @abstractmethod
-    def _write(
-        self,
-        obj,
-        fpath: Union[str, Path],
-        writer: Callable,
-        **kwargs,
-    ):
-        raise NotImplementedError("Subclasses must implement _write_file().")
+    def _format_fpath(self, fpath):
+        if isinstance(fpath, Path):
+            fpath = str(fpath)
+        if not isinstance(fpath, str):
+            raise TypeError("File path must be Path or str.")
+        return fpath
 
     def read(
         self,
@@ -176,11 +181,3 @@ class Storage(ABC):
     ):
         fpath = self._format_fpath(fpath=fpath)
         self._write(obj=obj, fpath=fpath, writer=writer, **kwargs)
-
-    @abstractmethod
-    def exists(self, fpath: Union[str, Path]):
-        raise NotImplementedError("Subclasses must implement exists().")
-
-    @abstractmethod
-    def delete(self,fpath: Union[str, Path]):
-        raise NotImplementedError("Subclasses must implement delete().")

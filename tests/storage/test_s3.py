@@ -13,9 +13,9 @@ def s3_storage_instance():
     return S3Storage(
         bucket_name=Config.S3_BUCKET_NAME,
         aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY,
-        region_name = Config.AWS_REGION,
-        endpoint_url = Config.S3_ENDPOINT_URL,
+        aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY,
+        region_name=Config.AWS_REGION,
+        endpoint_url=Config.S3_ENDPOINT_URL,
     )
 
 
@@ -70,17 +70,17 @@ def test_exists_file_not_found(s3_storage_instance, nonexistent_fpath):
 
 
 def test_exists_with_non_404_error(s3_storage_instance, mocker, nonexistent_fpath):
-    error_response = {'Error': {'Code': '500', 'Message': 'Internal Server Error'}}
+    error_response = {"Error": {"Code": "500", "Message": "Internal Server Error"}}
     mock_s3_client = mocker.Mock()
-    mock_s3_client.head_object.side_effect = ClientError(error_response, 'head_object')
+    mock_s3_client.head_object.side_effect = ClientError(error_response, "head_object")
     s3_storage_instance.s3_client = mock_s3_client
     with pytest.raises(ClientError) as exc_info:
         s3_storage_instance.exists(fpath=nonexistent_fpath)
-    assert exc_info.value.response['Error']['Code'] == '500'
-    assert exc_info.value.response['Error']['Message'] == 'Internal Server Error'
+    assert exc_info.value.response["Error"]["Code"] == "500"
+    assert exc_info.value.response["Error"]["Message"] == "Internal Server Error"
 
 
-def test_delete(s3_storage_instance, sample_df, gallery_csv_fpath): 
+def test_delete(s3_storage_instance, sample_df, gallery_csv_fpath):
     s3_storage_instance.write(obj=sample_df, fpath=gallery_csv_fpath)
     assert s3_storage_instance.exists(fpath=gallery_csv_fpath)
     s3_storage_instance.delete(fpath=gallery_csv_fpath)

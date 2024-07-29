@@ -8,7 +8,7 @@ from databridge._config import Config, Directory
 @pytest.fixture
 def config_instance():
     return Config()
-    
+
 
 def test_config_init(config_instance):
     assert isinstance(config_instance, Config)
