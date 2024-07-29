@@ -12,7 +12,11 @@ services:
       - AWS_REGION=us-east-1
       - S3_ENDPOINT_URL=http://localstack:4566 
       - S3_BUCKET_NAME=test-bucket
-      - PG_DATABASE_URL=postgresql://myuser:mypassword@postgres:5432/mydatabase
+      - PG_USER=myuser
+      - PG_PASSWORD=mypassword
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_DATABASE=mydatabase
     depends_on:
       - localstack
       - init-s3

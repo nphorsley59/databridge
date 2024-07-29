@@ -11,7 +11,8 @@ class Database(ABC):
         self.engine = None
 
     def __del__(self):
-        self.engine.dispose()
+        if self.engine is not None:
+            self.engine.dispose()
 
     @property
     @abstractmethod
@@ -52,7 +53,7 @@ class Database(ABC):
 
     def query(self, sql, params: dict = None) -> pd.DataFrame:
         if isinstance(sql, str):
-            sql = text(str)
+            sql = text(sql)
         with self.session() as active_session, active_session.begin():
             df = pd.read_sql(
                 sql=sql,

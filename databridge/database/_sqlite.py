@@ -10,5 +10,5 @@ class SqliteDatabase(Database):
 
     @property
     def session(self):
-        Session.configure(bin=self.engine)
+        Session.configure(bind=self.engine)
         return Session

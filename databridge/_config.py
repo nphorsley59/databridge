@@ -8,9 +8,11 @@ class Config:
     AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
     S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "test-bucket")
     S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT_URL", "http://localhost:4566")
-    PG_DATABASE_URL = os.getenv(
-        "PG_DATABASE_URL", "postgresql://myuser:mypassword@postgres:5432/mydatabase"
-    )
+    PG_USER = os.getenv("PG_USER", "myuser")
+    PG_PASSWORD = os.getenv("PG_PASSWORD", "mypassword")
+    PG_HOST = os.getenv("PG_HOST", "localhost")
+    PG_PORT = os.getenv("PG_PORT", "5432")
+    PG_DATABASE = os.getenv("PG_DATABASE", "mydatabase")
 
 
 class Directory:

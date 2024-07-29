@@ -1,8 +1,8 @@
 import os
-import pytest
 from typing import Callable
 
 import pandas as pd
+import pytest
 
 from databridge.storage._abstract import Storage
 
