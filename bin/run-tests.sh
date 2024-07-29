@@ -1,7 +1,11 @@
 #!/bin/sh
 
+# Wait for other services to spin up
+echo "Pausing to allow test-dependent services to spin up..."
+sleep 30
+
 # Ensure S3 bucket is available
-echo "Waiting for S3 bucket to be available..."
+echo "Checking if S3 bucket is available..."
 while true; do
   echo "S3_ENDPOINT_URL: $S3_ENDPOINT_URL"
   echo "S3_BUCKET_NAME: $S3_BUCKET_NAME"
@@ -21,7 +25,7 @@ while true; do
 done
 
 # Ensure Postgres database is available
-echo "Waiting for Postgres database to be available..."
+echo "Checking if Postgres database is available..."
 while true; do
   echo "PG_USER: $PG_USER"
   echo "PG_HOST: $PG_HOST"
