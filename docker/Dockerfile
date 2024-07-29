@@ -22,6 +22,9 @@ unzip awscliv2.zip && \
 ./aws/install && \
 rm -rf awscliv2.zip aws
 
+# Install PostgreSQL client utilities
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
 # Copy project files
 COPY pyproject.toml poetry.lock pytest.ini ./ 
 COPY databridge/ databridge/
