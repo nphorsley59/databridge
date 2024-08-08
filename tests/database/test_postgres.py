@@ -1,4 +1,3 @@
-
 import pytest
 
 from sqlalchemy.engine import Engine
@@ -21,7 +20,7 @@ def postgres_database_instance():
 
 def test_init(postgres_database_instance):
     assert isinstance(postgres_database_instance, PostgresDatabase)
-    assert isinstance(postgres_database_instance.engine, Engine) 
+    assert isinstance(postgres_database_instance.engine, Engine)
 
 
 def test_session_property(postgres_database_instance):

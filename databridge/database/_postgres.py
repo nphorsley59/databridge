@@ -20,4 +20,3 @@ class PostgresDatabase(Database):
     def session(self):
         Session.configure(bind=self.engine)
         return Session
-            

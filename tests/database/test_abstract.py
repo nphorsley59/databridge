@@ -58,7 +58,9 @@ def test_can_connect(concrete_database_instance):
 
 def test_execute(concrete_database_instance):
     concrete_database_instance.execute(sql="""DELETE FROM sample_table""")
-    count = concrete_database_instance.query(sql="""SELECT COUNT(*) FROM sample_table""")
+    count = concrete_database_instance.query(
+        sql="""SELECT COUNT(*) FROM sample_table"""
+    )
     assert count.iloc[0, 0] == 0
 
 
@@ -67,7 +69,9 @@ def test_load(concrete_database_instance, sample_df):
         table=SampleTable,
         df=sample_df,
     )
-    count = concrete_database_instance.query(sql="""SELECT COUNT(*) FROM sample_table""")
+    count = concrete_database_instance.query(
+        sql="""SELECT COUNT(*) FROM sample_table"""
+    )
     assert count.iloc[0, 0] == 4
 
 

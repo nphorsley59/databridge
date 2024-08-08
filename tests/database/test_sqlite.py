@@ -13,7 +13,7 @@ def sqlite_database_instance():
 
 def test_init(sqlite_database_instance):
     assert isinstance(sqlite_database_instance, SqliteDatabase)
-    assert isinstance(sqlite_database_instance.engine, Engine) 
+    assert isinstance(sqlite_database_instance.engine, Engine)
 
 
 def test_session_property(sqlite_database_instance):
