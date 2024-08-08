@@ -10,11 +10,11 @@ from databridge.database._postgres import PostgresDatabase
 @pytest.fixture
 def postgres_database_instance():
     return PostgresDatabase(
-        user=Config.PG_USER,
-        password=Config.PG_PASSWORD,
-        host=Config.PG_HOST,
-        port=Config.PG_PORT,
-        database=Config.PG_DATABASE,
+        user=Config().PG_USER,
+        password=Config().PG_PASSWORD,
+        host=Config().PG_HOST,
+        port=Config().PG_PORT,
+        database=Config().PG_DATABASE,
     )
 
 
