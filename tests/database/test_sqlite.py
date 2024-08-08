@@ -17,8 +17,8 @@ def test_init(sqlite_database_instance):
 
 
 def test_session_property(sqlite_database_instance):
-    assert isinstance(sqlite_database_instance.session, sessionmaker)
-    with sqlite_database_instance.session() as active_session, active_session.begin():
+    assert isinstance(sqlite_database_instance._session, sessionmaker)
+    with sqlite_database_instance._session() as active_session, active_session.begin():
         assert active_session.bind == sqlite_database_instance.engine
         assert active_session.bind.connect()
 

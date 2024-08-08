@@ -9,6 +9,6 @@ class SqliteDatabase(Database):
         self.engine = create_engine("sqlite://")
 
     @property
-    def session(self):
+    def _session(self):
         Session.configure(bind=self.engine)
         return Session

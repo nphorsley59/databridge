@@ -17,6 +17,6 @@ class PostgresDatabase(Database):
         self.engine = create_engine(self.url, pool_size=20)
 
     @property
-    def session(self):
+    def _session(self):
         Session.configure(bind=self.engine)
         return Session

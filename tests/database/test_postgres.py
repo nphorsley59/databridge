@@ -24,8 +24,8 @@ def test_init(postgres_database_instance):
 
 
 def test_session_property(postgres_database_instance):
-    assert isinstance(postgres_database_instance.session, sessionmaker)
-    with postgres_database_instance.session() as active_session, active_session.begin():
+    assert isinstance(postgres_database_instance._session, sessionmaker)
+    with postgres_database_instance._session() as active_session, active_session.begin():
         assert active_session.bind == postgres_database_instance.engine
         assert active_session.bind.connect()
 

@@ -13,7 +13,7 @@ class ConcreteDatabase(Database):
         self.engine = create_engine("sqlite://")
 
     @property
-    def session(self):
+    def _session(self):
         Session.configure(bind=self.engine)
         return Session
 
@@ -88,8 +88,8 @@ class DummyDatabase(Database):
     def __init__(self):
         super().__init__()
 
-    def session(self):
-        super().session()
+    def _session(self):
+        super()._session()
 
 
 @pytest.fixture
@@ -103,7 +103,7 @@ def test_init_no_engine(dummy_database_instance):
 
 def test_session_not_implemented(dummy_database_instance):
     with pytest.raises(NotImplementedError):
-        dummy_database_instance.session()
+        dummy_database_instance._session()
 
 
 def test_can_connect_operational_error(dummy_database_instance, mocker):

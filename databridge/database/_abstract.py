@@ -16,7 +16,7 @@ class Database(ABC):
 
     @property
     @abstractmethod
-    def session(self):
+    def _session(self):
         raise NotImplementedError("Subclasses must implement session().")
 
     @property
@@ -33,7 +33,7 @@ class Database(ABC):
     def execute(self, sql: str) -> None:
         if isinstance(sql, str):
             sql = text(sql)
-        with self.session() as active_session, active_session.begin():
+        with self._session() as active_session, active_session.begin():
             active_session.execute(sql)
 
     def load(
@@ -43,7 +43,7 @@ class Database(ABC):
         if_exists: str = "replace",
         index: bool = False,
     ) -> None:
-        with self.session() as active_session, active_session.begin():
+        with self._session() as active_session, active_session.begin():
             df.to_sql(
                 name=table.__tablename__,
                 con=active_session.bind,
@@ -54,7 +54,7 @@ class Database(ABC):
     def query(self, sql, params: dict = None) -> pd.DataFrame:
         if isinstance(sql, str):
             sql = text(sql)
-        with self.session() as active_session, active_session.begin():
+        with self._session() as active_session, active_session.begin():
             df = pd.read_sql(
                 sql=sql,
                 con=active_session.bind.connect(),
