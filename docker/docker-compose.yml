@@ -5,23 +5,23 @@ services:
       dockerfile: docker/Dockerfile
     container_name: app_container
     volumes:
-      - ..:/app  # Bind mount the parent directory
+      - ..:/app  # Mount the parent directory
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - AWS_REGION=us-east-1
-      - S3_ENDPOINT_URL=http://localstack:4566 
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ENDPOINT_URL=http://localstack:4566 
       - S3_BUCKET_NAME=test-bucket
-      - PGPASSWORD=mypassword
-      - PG_USER=myuser
-      - PG_HOST=postgres
-      - PG_PORT=5432
-      - PG_DATABASE=mydatabase
+      - PGPASSWORD=mypassword  # Default variable name, expected by psql
+      - POSTGRES_USER=myuser
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=mydatabase
     depends_on:
       - localstack
       - init-s3
       - postgres
-    entrypoint: ["/bin/sh", "-c", "/scripts/run-tests.sh"]
+    entrypoint: ["/bin/sh", "-c", "/scripts/run-tests.sh"]  # Run tests
 
   localstack:
     image: localstack/localstack
@@ -33,7 +33,7 @@ services:
       - SERVICES=s3
       - DEBUG=1
     volumes:
-      - localstack_data:/var/lib/localstack  # Use the named volume
+      - localstack_data:/var/lib/localstack
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:4566/_localstack/health || exit 1"]
       interval: 5s
@@ -51,7 +51,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=test
       - AWS_DEFAULT_REGION=us-east-1
     volumes:
-      - ../bin/create-bucket.sh:/scripts/create-bucket.sh  # Bind mount the script
+      - ../bin/create-bucket.sh:/scripts/create-bucket.sh 
 
   postgres:
     image: postgres:13
