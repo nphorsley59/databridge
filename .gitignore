@@ -29,3 +29,6 @@ docker-compose.override.yml
 # Ignore temporary files and directories
 tmp/
 temp/
+
+# Ignore environment files
+poetry.lock
