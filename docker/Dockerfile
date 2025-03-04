@@ -37,7 +37,7 @@ COPY bin/run-tests.sh /scripts/run-tests.sh
 
 # Install Poetry and dependencies
 RUN pip install poetry && poetry config virtualenvs.create false
-RUN poetry install
+RUN poetry install --no-root
 
 # Ensure shell scripts are executable
 RUN chmod +x /scripts/run-tests.sh
